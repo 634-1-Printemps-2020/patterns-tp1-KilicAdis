@@ -6,19 +6,18 @@ public class PyRat {
     private List<Point> fromages;
     private Map<Point, List<Point>> laby;
     private Set<Point> fromagesSet;
+    private Map<Point, Set<Point>> labySet;
 
     /* Méthode appelée une seule fois permettant d'effectuer des traitements "lourds" afin d'augmenter la performace de la méthode turn. */
     public void preprocessing(Map<Point, List<Point>> laby, int labyWidth, int labyHeight, Point position, List<Point> fromages) {
         this.fromages = fromages;
+        this.fromagesSet = new HashSet<>(fromages);
+        this.labySet = new HashMap<>();
         this.laby = laby;
-        fromagesSet = new HashSet<>(fromages);
-        fromagesSet.addAll(fromages);
-        Map<Point, Set<Point>> labySet = new HashMap<>();
         for(Point key: laby.keySet()){
-            Set<Point> setPoint = new HashSet<Point>(laby.get(key));
-            labySet.put(key, setPoint);
+            Set<Point> values = new HashSet<>(laby.get(key));
+            labySet.put(key, values);
         }
-
     }
 
     /* Méthode de test appelant les différentes fonctionnalités à développer.
@@ -39,20 +38,20 @@ public class PyRat {
     /* Regarde dans la liste des fromages s’il y a un fromage à la position pos.
         @return true s'il y a un fromage à la position pos, false sinon. */
     private boolean fromageIci(Point pos) {
-        return fromages.contains(pos);
+        return this.fromages.contains(pos);
     }
 
     /* Regarde de manière performante (accès en ordre constant) s’il y a un fromage à la position pos.
         @return true s'il y a un fromage à la position pos, false sinon. */
     private boolean fromageIci_EnOrdreConstant(Point pos) {
-        return fromagesSet.contains(pos);
+        return this.fromagesSet.contains(pos);
     }
 
     /* Indique si le joueur peut passer de la position (du Point) « de » au point « a ».
         @return true s'il y a un passage depuis  « de » vers « a ». */
     private boolean passagePossible(Point de, Point a) {
-        if(laby.containsKey(de)){               //Si la map contient la clé de
-            return laby.get(de).contains(a);     //On get la liste et on retourne si oui ou non le point a est atteignable
+        if(laby.containsKey(de)){
+            return laby.get(de).contains(a);
         }
         return false;
     }
@@ -61,12 +60,16 @@ public class PyRat {
         mais sans devoir parcourir la liste des Points se trouvant dans la Map !
         @return true s'il y a un passage depuis  « de » vers « a ». */
     private boolean passagePossible_EnOrdreConstant(Point de, Point a) {
+        if(this.labySet.containsKey(de)){
+            return this.labySet.get(de).contains(a);
+        }
         return false;
     }
 
     /* Retourne la liste des points qui ne peuvent pas être atteints depuis la position « pos ».
         @return la liste des points qui ne peuvent pas être atteints depuis la position « pos ». */
     private List<Point> pointsInatteignables(Point pos) {
+        
         return null;
     }
 }
