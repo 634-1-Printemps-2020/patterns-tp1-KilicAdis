@@ -7,9 +7,14 @@ public class PyRat {
     private Map<Point, List<Point>> laby;
     private Set<Point> fromagesSet;
     private Map<Point, Set<Point>> labySet;
-
+    private List<Point> atteint;
+    private List<Point> chemin;
+    private int labyWidth;
+    private int labyHeight;
     /* Méthode appelée une seule fois permettant d'effectuer des traitements "lourds" afin d'augmenter la performace de la méthode turn. */
     public void preprocessing(Map<Point, List<Point>> laby, int labyWidth, int labyHeight, Point position, List<Point> fromages) {
+        this.labyHeight = labyHeight;
+        this.labyWidth = labyWidth;
         this.fromages = fromages;
         this.fromagesSet = new HashSet<>(fromages);
         this.labySet = new HashMap<>();
@@ -69,7 +74,33 @@ public class PyRat {
     /* Retourne la liste des points qui ne peuvent pas être atteints depuis la position « pos ».
         @return la liste des points qui ne peuvent pas être atteints depuis la position « pos ». */
     private List<Point> pointsInatteignables(Point pos) {
-        
-        return null;
+        atteint = new ArrayList<>();
+        chemin = new ArrayList<>();
+        List<Point> nonAtteint = new ArrayList<>();
+        parcoursRec(pos);
+        for(int i = 0; i < labyWidth; i++){
+            for(int y = 0; y < labyHeight; y++){
+                Point pt = new Point(i,y);
+                if(!atteint.contains(pt)){
+                    nonAtteint.add(pt);
+                }
+            }
+        }
+        return nonAtteint;
     }
+
+    private void parcoursRec(Point pt){
+        chemin.add(pt);
+        for(Point voisin : laby.get(pt)){
+            if (!chemin.contains(voisin)){
+                //cpt++;
+                System.out.println(voisin);
+                atteint.add(voisin);
+                parcoursRec(voisin);
+                //cpt--;
+            }
+        }
+        chemin.remove(pt);
+    }
+
 }
