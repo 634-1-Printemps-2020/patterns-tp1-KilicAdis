@@ -55,8 +55,8 @@ public class PyRat {
     /* Indique si le joueur peut passer de la position (du Point) « de » au point « a ».
         @return true s'il y a un passage depuis  « de » vers « a ». */
     private boolean passagePossible(Point de, Point a) {
-        if(laby.containsKey(de)){
-            return laby.get(de).contains(a);
+        if(laby.containsKey(de)){               //Si la position de est dans le labyrinthe
+            return laby.get(de).contains(a);    //Retourne true ou false si le point est atteignable
         }
         return false;
     }
@@ -65,8 +65,8 @@ public class PyRat {
         mais sans devoir parcourir la liste des Points se trouvant dans la Map !
         @return true s'il y a un passage depuis  « de » vers « a ». */
     private boolean passagePossible_EnOrdreConstant(Point de, Point a) {
-        if(this.labySet.containsKey(de)){
-            return this.labySet.get(de).contains(a);
+        if(this.labySet.containsKey(de)){               //Si la position de est dans le labyrinthe
+            return this.labySet.get(de).contains(a);    //Retourne true ou false si le point est atteignable
         }
         return false;
     }
@@ -74,33 +74,31 @@ public class PyRat {
     /* Retourne la liste des points qui ne peuvent pas être atteints depuis la position « pos ».
         @return la liste des points qui ne peuvent pas être atteints depuis la position « pos ». */
     private List<Point> pointsInatteignables(Point pos) {
+        //Initialisation des listes
         atteint = new ArrayList<>();
         chemin = new ArrayList<>();
         List<Point> nonAtteint = new ArrayList<>();
-        parcoursRec(pos);
-        for(int i = 0; i < labyWidth; i++){
-            for(int y = 0; y < labyHeight; y++){
-                Point pt = new Point(i,y);
-                if(!atteint.contains(pt)){
-                    nonAtteint.add(pt);
+        parcoursRec(pos);                           //Parcours récursif du labyrinthe (Remplissage des points atteint)
+        for(int i = 0; i < labyWidth; i++){         //Boucle longueur
+            for(int y = 0; y < labyHeight; y++){    //Boucle hauteur
+                Point pt = new Point(i,y);          //Création d'un nouveau point
+                if(!atteint.contains(pt)){          //Si le point n'est dans la liste des points atteints
+                    nonAtteint.add(pt);             //Ajout dans non atteignable
                 }
             }
         }
-        return nonAtteint;
+        return nonAtteint;                          //Retourne la liste
     }
 
     private void parcoursRec(Point pt){
-        chemin.add(pt);
-        for(Point voisin : laby.get(pt)){
-            if (!chemin.contains(voisin)){
-                //cpt++;
-                System.out.println(voisin);
-                atteint.add(voisin);
-                parcoursRec(voisin);
-                //cpt--;
+        chemin.add(pt);                             //Ajout du point (Marquage)
+        for(Point voisin : laby.get(pt)){           //Boucle des voisins
+            if (!chemin.contains(voisin)){          //Si le chemin ne contient pas le voisin
+                atteint.add(voisin);                //Ajout aux points atteint
+                parcoursRec(voisin);                //Parcours récursif
             }
         }
-        chemin.remove(pt);
+        chemin.remove(pt);                          //Suppression de la liste des visité
     }
 
 }
